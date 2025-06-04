@@ -11,3 +11,5 @@ transformers
 gradio
 ipywidgets
 notebook
+tensorflow
+torch
