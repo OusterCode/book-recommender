@@ -19,7 +19,7 @@ books["large_thumbnail"] = np.where(
     books["large_thumbnail"],
 )
 
-raw_documents = TextLoader("tagged_description.txt").load()
+raw_documents = TextLoader("tagged_description.txt", encoding="utf-8").load()
 text_splitter = CharacterTextSplitter(separator="\n", chunk_size=0, chunk_overlap=0)
 documents = text_splitter.split_documents(raw_documents)
 db_books = Chroma.from_documents(documents, OpenAIEmbeddings())
@@ -52,6 +52,8 @@ def retrieve_semantic_recommendations(
         book_recs.sort_values(by="fear", ascending=False, inplace=True)
     elif tone == "Sad":
         book_recs.sort_values(by="sadness", ascending=False, inplace=True)
+    elif tone == "Disgust":
+        book_recs.sort_values(by="disgust", ascending=False, inplace=True)
 
     return book_recs
 
@@ -82,7 +84,7 @@ def recommend_books(
     return results
 
 categories = ["All"] + sorted(books["simple_categories"].unique())
-tones = ["All"] + ["Happy", "Surprising", "Angry", "Suspenseful", "Sad"]
+tones = ["All"] + ["Happy", "Surprising", "Angry", "Suspenseful", "Sad", "Disgust"]
 
 with gr.Blocks(theme = gr.themes.Glass()) as dashboard:
     gr.Markdown("# Semantic book recommender")
